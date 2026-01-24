@@ -7,7 +7,9 @@ authors = [
     { name = "Iggy Siegel", email = "iggysiegel@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "ollama>=0.6.1",
+]
 
 [project.scripts]
 bda-svc = "bda_svc.app:main"
@@ -46,5 +48,6 @@ ignore = [
     "D203",
     "D213",
     "D401",
+    "D413",
     "E501",
 ]
