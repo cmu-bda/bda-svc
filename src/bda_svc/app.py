@@ -21,5 +21,6 @@ def main() -> None:
     result = vlm.analyze_image(image_path)
 
     # Display result
-    # TODO: Create JSON output
+    # TODO: Create JSON output file
     print(result)
+
