@@ -1,7 +1,7 @@
 [project]
 name = "bda-svc"
 version = "0.1.0"
-description = "Package for autonomous battle damage assessment"
+description = "Package for autonomous battle damage assessment."
 readme = "README.md"
 authors = [
     { name = "Iggy Siegel", email = "iggysiegel@gmail.com" }
@@ -26,7 +26,7 @@ dev = [
 ]
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py312"
 line-length = 88
 
 [tool.ruff.format]
