@@ -1,8 +1,32 @@
-# ------------------------------------------------------------------
-# SINGLE APPROVER CONFIGURATION
-# ------------------------------------------------------------------
-# This wildcard (*) ensures that every single file in the repo
-# is "owned" by this specific user.
-# GitHub will automatically request their review on every PR.
+# --------------------------------------------------------
+# CORE CODE (REQUIRES REVIEW)
+# --------------------------------------------------------
+# Explicitly list the extensions or folders you care about.
+# Only these files will trigger the "Must be reviewed by Lead" rule.
 
-* @carloshgil
+# 1. Source Code extensions
+*.py    @carloshgil
+*.yaml    @carloshgil
+*.yml    @carloshgil
+*.toml    @carloshgil
+*.lock  @carloshgil
+
+# 2. Critical Configuration Files
+# (You definitely want to approve changes to how the app builds)
+Dockerfile      @carloshgil
+docker-compose* @carloshgil
+package.json    @carloshgil
+requirements.txt @carloshgil
+
+# 3. Critical Directories
+# Protects everything inside these folders, regardless of extension.
+/src/           @carloshgil
+/.github/       @carloshgil @corwin1gate
+
+# --------------------------------------------------------
+# UNRESTRICTED FILES (IMPLICIT)
+# --------------------------------------------------------
+# Any file NOT listed above (like README.md, LICENSE, .txt)
+# will NOT have a Code Owner.
+# Result: The branch protection rule "Require review from Code Owners"
+# will NOT trigger for them.
