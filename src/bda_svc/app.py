@@ -29,7 +29,7 @@ def get_args() -> argparse.Namespace:
 
 
 def get_input_path(cmdline_path: str) -> str:
-    """Retrieve input path."""
+    """Retrieve input path and perform validation."""
     # Get command-line path argument (if provided)
     if cmdline_path:
         input_path = cmdline_path
