@@ -24,6 +24,7 @@ VLMs for Autonomous Battle Damage Assessment.
 
 # Project Structure
 ```
+├── .github/              # CI/CD development 
 ├── src/
 │   └── bda_svc/
 │       ├── __init__.py
