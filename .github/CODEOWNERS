@@ -1,0 +1,8 @@
+# ------------------------------------------------------------------
+# SINGLE APPROVER CONFIGURATION
+# ------------------------------------------------------------------
+# This wildcard (*) ensures that every single file in the repo
+# is "owned" by this specific user.
+# GitHub will automatically request their review on every PR.
+
+* @carloshgil
