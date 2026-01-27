@@ -15,7 +15,7 @@ DEFAULT_INPUT_PATH = "./bda_input"
 
 def get_args() -> argparse.Namespace:
     """Retrieve argparse arguments."""
-    bda_svc_desc = "Automated BDA service powered by machine-learning"
+    bda_svc_desc = "Automated BDA service powered by machine-learning."
 
     parser = argparse.ArgumentParser(description=bda_svc_desc)
 
