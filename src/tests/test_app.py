@@ -2,6 +2,7 @@ import pytest
 import sys
 from pathlib import Path
 from unittest.mock import patch, MagicMock
+import argparse
 
 # Import the logic we want to test
 from bda_svc import app
@@ -91,7 +92,7 @@ def test_main_workflow(mock_args, mock_get_folder, mock_get_paths, MockVLM):
 
     # 2. Run Main
     # We need to import argparse here or inside the function if it wasn't imported globally
-    import argparse
+
     app.main()
 
     # 3. Assertions
