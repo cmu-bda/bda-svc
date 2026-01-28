@@ -1,9 +1,9 @@
 """Main application entry point for BDA Service."""
 
 import argparse
+import sys
 from os import environ
 from pathlib import Path
-from sys import exit
 
 from bda_svc.model import VLM
 
@@ -14,7 +14,12 @@ DEFAULT_INPUT_PATH = "./bda_input"
 
 
 def get_args() -> argparse.Namespace:
-    """Retrieve argparse arguments."""
+    """Retrieve argparse arguments.
+
+    Returns
+    -------
+        argparse arguments (Namespace object)
+    """
     bda_svc_desc = "Automated BDA service powered by machine-learning."
 
     parser = argparse.ArgumentParser(description=bda_svc_desc)
@@ -28,27 +33,57 @@ def get_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def get_input_path(cmdline_path: str) -> str:
-    """Retrieve input path and perform validation."""
+def get_input_folder(cmdline_path: str) -> Path:
+    """Retrieve input path and perform validation.
+
+    Args:
+    ----
+        cmdline_path: Path to the input folder.
+
+    Returns:
+    -------
+        Path of validated input folder
+    """
     # Get command-line path argument (if provided)
     if cmdline_path:
-        input_path = cmdline_path
+        input_folder_str = cmdline_path
     else:
         # Get input path from ENV variable (or select default folder)
-        input_path = environ.get(ENV_INPUT_NAME, DEFAULT_INPUT_PATH)
+        input_folder_str = environ.get(ENV_INPUT_NAME, DEFAULT_INPUT_PATH)
+
+    input_folder = Path(input_folder_str)
 
     # TODO: implement better logging
-    print("[*] Retrieving input from", input_path)
+    print(f"[*] Input source set to {input_folder.resolve()}")
 
     # TODO: Create robot endpoint to avoid manually specifying path
 
     # Perform path validation
-    if not Path(input_path).exists():
+    if not input_folder.exists():
         # raise FileNotFoundError(f"Image not found at {input_path}\n")
         # Print to STDERR with exit code 1
-        exit(f"\nThe input path {input_path} does not exist. Exiting.\n")
+        sys.exit(f"\nThe input path {input_folder} does not exist. Exiting.\n")
 
-    return input_path
+    return input_folder
+
+
+def get_input_paths(input_folder: Path) -> tuple:
+    """Retrieve paths to all input files.
+
+    Args:
+    ----
+        input_folder: Path of input folder
+
+    Returns:
+    -------
+        Tuple containing file paths
+    """
+    files = tuple(input_folder.rglob("*"))
+
+    if not files:
+        sys.exit(f"\nThe input path {input_folder.resolve()} is empty. Exiting.\n")
+
+    return files
 
 
 def main() -> None:
@@ -57,14 +92,20 @@ def main() -> None:
     args = get_args()
 
     # Get path to input folder
-    input_path = get_input_path(args.input)
+    input_folder = get_input_folder(args.input)
+
+    input_paths = get_input_paths(input_folder)
 
     # Initialize model
     vlm = VLM()
 
     # Run analysis
-    result = vlm.analyze_image(input_path)
+    # TODO: Add additional loop logic when parsing multiple files
+    for input_path in input_paths:
+        print(f"\nProcessing: {input_path}\n{'-' * 80}")
 
-    # Display result
-    # TODO: Create JSON output file
-    print(result)
+        result = vlm.analyze_image(input_path)
+
+        # Display result
+        # TODO: Create JSON output file
+        print(f"{result}\n")
