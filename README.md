@@ -22,6 +22,27 @@ VLMs for Autonomous Battle Damage Assessment.
    uv run pre-commit install
    ```
 
+# Run software
+
+1. **For usage information**:
+   ```bash
+   uv run bda-svc -h
+   ```
+
+2. **Run the BDA service with a command-line folder path (override environment variable)**:
+   ```bash
+   uv run bda-svc -i /path/to/images
+   ```
+
+3. **Alternatively, run the BDA service with an environment variable**:
+   ```bash
+   BDA_INPUT="/path/to/images" uv run bda-svc
+   ```
+   
+> [!NOTE]
+> If the image folder path is not specified, bda-svc will default to using `./bda_input`.
+<br />
+
 # Project Structure
 ```
 ├── .github/              # CI/CD development folder
