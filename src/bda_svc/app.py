@@ -67,7 +67,7 @@ def get_input_folder(cmdline_path: str) -> Path:
     return input_folder
 
 
-def get_input_paths(input_folder: Path) -> tuple:
+def get_input_paths(input_folder: Path) -> list:
     """Retrieve paths to all input files.
 
     Args:
@@ -76,13 +76,22 @@ def get_input_paths(input_folder: Path) -> tuple:
 
     Returns:
     -------
-        Tuple containing file paths
+        List containing file paths
     """
+    files = []
+    valid_ext = (".png", ".jpg", ".jpeg", ".bmp", ".tiff")
+    patterns = [f"**/*{ext}" for ext in valid_ext]
+
     # Perform recursive file search
-    files = tuple(input_folder.rglob("*"))
+    for pattern in patterns:
+        # NOTE: Need extend because glob returns a generator
+        files.extend(input_folder.glob(pattern))
 
     if not files:
-        sys.exit(f"\nThe input path {input_folder.resolve()} is empty. Exiting.\n")
+        sys.exit(
+            f"\nThe input path {input_folder} "
+            f"does not contain valid input data. Exiting.\n"
+        )
 
     return files
 
