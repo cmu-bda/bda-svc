@@ -22,9 +22,9 @@ VLMs for Autonomous Battle Damage Assessment.
    uv run pre-commit install
    ```
 
-# Run software
+# Usage
 
-1. **For usage information**:
+1. **For complete usage information**:
    ```bash
    uv run bda-svc -h
    ```
