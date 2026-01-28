@@ -4,7 +4,6 @@ import argparse
 import sys
 from os import environ
 from pathlib import Path
-from sys import exit
 
 from bda_svc.model import VLM
 
@@ -79,6 +78,7 @@ def get_input_paths(input_folder: Path) -> tuple:
     -------
         Tuple containing file paths
     """
+    # Perform recursive file search
     files = tuple(input_folder.rglob("*"))
 
     if not files:
