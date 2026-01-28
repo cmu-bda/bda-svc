@@ -29,9 +29,13 @@ VLMs for Autonomous Battle Damage Assessment.
    uv run bda-svc -h
    ```
 
-2. **Run the BDA service with a command-line folder path (override environment variable)**:
+2. **Run the BDA service with a command-line image or folder path (override environment variable)**:
    ```bash
-   uv run bda-svc -i /path/to/images
+   uv run bda-svc -i /path/to/image.ext
+
+   # or
+   
+   uv run bda-svc -i /path/to/folder
    ```
 
 3. **Alternatively, run the BDA service with an environment variable**:
