@@ -4,6 +4,7 @@ import argparse
 import sys
 from os import environ
 from pathlib import Path
+from sys import exit
 
 from bda_svc.model import VLM
 
