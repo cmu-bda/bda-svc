@@ -1,6 +1,9 @@
 # Input data
 bda_input/
 
+# Local development
+local/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

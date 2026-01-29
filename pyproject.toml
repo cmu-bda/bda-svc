@@ -1,14 +1,22 @@
 [project]
 name = "bda-svc"
 version = "0.1.0"
-description = "Package for autonomous battle damage assessment."
+description = "Automated Battle Damage Assessment system powered by machine learning."
 readme = "README.md"
 authors = [
-    { name = "Iggy Siegel", email = "iggysiegel@gmail.com" }
+    { name = "William Benitez", email = "wbenitez@andrew.cmu.edu" },
+    { name = "Carlos Gil", email = "chgil@andrew.cmu.edu" },
+    { name = "Nicholas Lind", email = "nlind@andrew.cmu.edu" },
+    { name = "Iggy Siegel", email = "bsiegel2@andrew.cmu.edu" },
+    { name = "Cory Wingate", email = "cwingate@andrew.cmu.edu" },
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
+    "accelerate>=1.12.0",
     "ollama>=0.6.1",
+    "torch>=2.10.0",
+    "torchvision>=0.25.0",
+    "transformers>=5.0.0",
 ]
 
 [project.scripts]
@@ -20,9 +28,25 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "ipykernel>=7.1.0",
+    "ipywidgets>=8.1.8",
+    "matplotlib>=3.10.8",
     "pre-commit>=4.5.1",
     "pytest>=9.0.2",
     "ruff>=0.14.14",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu130", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+torchvision = [
+  { index = "pytorch-cu130", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
 ]
 
 [tool.ruff]
@@ -34,20 +58,5 @@ docstring-code-format = true
 docstring-code-line-length = 72
 
 [tool.ruff.lint]
-select = [
-    "E",
-    "W",
-    "F",
-    "I",
-    "B",
-    "C4",
-    "UP",
-    "D",
-]
-ignore = [
-    "D203",
-    "D213",
-    "D401",
-    "D413",
-    "E501",
-]
+select = ["E", "W", "F", "I", "B", "C4", "UP", "D"]
+ignore = ["D203", "D213", "D401", "D413", "E501"]

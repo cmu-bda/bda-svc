@@ -6,18 +6,19 @@ VLMs for Autonomous Battle Damage Assessment.
 
 # Development Setup
 
-1. [**Install Ollama**](https://ollama.com/download)
+1. [**Install uv**](https://docs.astral.sh/uv/getting-started/installation/)
 
-2. [**Install uv**](https://docs.astral.sh/uv/getting-started/installation/)
+2. [**Install Ollama**](https://ollama.com/download)
 
-3. **Clone the repository and install dependencies**:
+3. **Clone the repository and install dependencies**
    ```bash
    git clone <repository-url>
    cd bda-svc
    uv sync --dev
+   source .venv/bin/activate
    ```
 
-4. **Install pre-commit hooks**:
+4. **Install pre-commit hooks**
    ```bash
    uv run pre-commit install
    ```
@@ -42,14 +43,10 @@ VLMs for Autonomous Battle Damage Assessment.
    ```bash
    BDA_INPUT="/path/to/images" uv run bda-svc
    ```
-   
-> [!NOTE]
-> If the image folder path is not specified, bda-svc will default to using `./bda_input`.
-<br />
 
 # Project Structure
 ```
-├── .github/              # CI/CD development folder
+├── .github/               # CI/CD development folder
 ├── src/
 │   └── bda_svc/
 │       ├── __init__.py
@@ -58,8 +55,8 @@ VLMs for Autonomous Battle Damage Assessment.
 │       └── model.py       # Machine learning models
 │       └── utilities.py   # Shared utilities
 │   └── robot/
-│       └── containers/     # Docker / containerization
-│       └── api/            # If needed for robot communication
+│       └── containers/    # Docker / containerization
+│       └── api/           # If needed for robot communication
 ├── tests/
 ├── pyproject.toml
 ├── uv.lock
