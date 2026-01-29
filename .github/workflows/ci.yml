@@ -1,0 +1,36 @@
+name: CI Pipeline
+
+# Trigger the workflow on:
+# 1. Pushes to any branch (know if it breaks before you even open a PR)
+# 2. Pull Requests targeting main
+on:
+  push:
+    branches: [ "**" ]  # Run on all branches
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Check out the code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+
+    # 3. Install dependencies 
+    - name: Install dependencies with uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        uv sync
+
+    # 4. Run Tests
+    - name: Run Tests
+      # 'uv run' ensures it uses the virtual environment created by 'uv sync'
+      run: uv run pytest
