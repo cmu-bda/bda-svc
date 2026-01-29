@@ -5,9 +5,8 @@ import sys
 from os import environ
 from pathlib import Path
 
-from bda_svc.model import VLM
+from bda_svc.model import BDAPipeline
 
-# TODO: Establish config file
 # Global variables
 ENV_INPUT_NAME = "BDA_INPUT"
 DEFAULT_INPUT_PATH = "./bda_input"
@@ -107,14 +106,14 @@ def main() -> None:
     input_paths = get_input_paths(input_folder)
 
     # Initialize model
-    vlm = VLM()
+    model = BDAPipeline()
 
     # Run analysis
     # TODO: Add additional loop logic when parsing multiple files
     for input_path in input_paths:
         print(f"\nProcessing: {input_path}\n{'-' * 80}")
 
-        result = vlm.analyze_image(input_path)
+        result = model.analyze(input_path)
 
         # Display result
         # TODO: Create JSON output file
