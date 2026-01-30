@@ -35,4 +35,4 @@ RUN python -c "from transformers import AutoModel, AutoProcessor; \
 # 5. STARTUP
 COPY . .
 
-CMD ollama serve & sleep 5 && python app.py
+CMD ["sh", "-c", "ollama serve & exec uv run bda-svc"]
