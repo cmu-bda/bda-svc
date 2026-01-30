@@ -51,7 +51,10 @@ VLMs for Autonomous Battle Damage Assessment.
 │   └── bda_svc/
 │       ├── __init__.py
 │       └── app.py         # Main analysis script
+│       └── cli.py         # Command-line functionality
 │       └── config.yaml    # Model / Prompt selection
+│       └── constants.py   # Collection of constant values
+│       └── inputs.py      # Input data retrieval
 │       └── model.py       # Machine learning models
 │       └── utilities.py   # Shared utilities
 │   └── robot/
