@@ -1,22 +1,38 @@
-# 1. Base Python Image
-FROM python:3.12-alpine
+# --- Stage 1: The "Donor" Image ---
+FROM ollama/ollama:latest AS ollama-donor
 
-# 2. Set the working directory inside the container
+# --- Stage 2: Your App Image ---
+FROM python:3.12-slim
+
 WORKDIR /app
 
-# 3. Install system build tools
-RUN apk update && apk add gcc libc-dev g++
+# 1. SETUP UV & DEPENDENCIES
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+COPY pyproject.toml .
+RUN uv pip install --system -r pyproject.toml
 
-# 4. Copy specific files
-COPY dist/llm_server-1.0.0-py2.py3-none-any.whl .
-COPY tinyllama-1.1b-chat-v1.0.Q2_K.gguf .
+# 2. INSTALL OLLAMA & UTILS
+RUN apt-get update && apt-get install -y procps
 
-# 5. Install the Python wheel
-RUN pip install llm_server-1.0.0-py2.py3-none-any.whl
+# Copy the binary from the official image
+COPY --from=ollama-donor /bin/ollama /usr/bin/ollama
 
-# 5. Copy the rest of Flask app
+# Create the config directory
+RUN mkdir -p /root/.ollama
+
+# 3. DOWNLOAD MODELS (Bake into image)
+RUN ollama serve & \
+    sleep 5 && \
+    ollama pull qwen3-vl:8b && \
+    pkill ollama
+
+# 4. DOWNLOAD HUGGING FACE MODEL (Bake into image)
+RUN python -c "from transformers import AutoModel, AutoProcessor; \
+    model_id = 'IDEA-Research/grounding-dino-base'; \
+    AutoModel.from_pretrained(model_id); \
+    AutoProcessor.from_pretrained(model_id)"
+
+# 5. STARTUP
 COPY . .
 
-EXPOSE 8000
-
-CMD ["bda-", "--listen=0.0.0.0:8000", "llm_server.main:app"]
+CMD ollama serve & sleep 5 && python app.py
