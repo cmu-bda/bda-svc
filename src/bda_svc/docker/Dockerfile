@@ -35,4 +35,4 @@ RUN python -c "from transformers import AutoModel, AutoProcessor; \
 # 5. STARTUP
 COPY . .
 
-CMD ["sh", "-c", "ollama serve & exec uv run bda-svc"]
+CMD ["sh", "-c", "ollama serve & exec uv run bda-svc", "-i", "/home/cory/images"]
