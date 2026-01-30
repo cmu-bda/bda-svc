@@ -35,4 +35,10 @@ RUN python -c "from transformers import AutoModel, AutoProcessor; \
 # 5. STARTUP
 COPY . .
 
+# 6. EXPOSE Port??
+# EXPOSE 8080??
+
+# TODO: 1. add port binding?
+#       2. bind port during runtime ? "docker run -p 8080:8080"
+#       3. Mount drive during runtime? "docker run --rm -v /home/test:/images:ro "
 CMD ["sh", "-c", "ollama serve & exec uv run bda-svc"]
