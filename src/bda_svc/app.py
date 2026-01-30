@@ -1,6 +1,6 @@
 """Main application entry point for BDA Service."""
 
-from bda_svc import cli, inputs
+from bda_svc import cli, export, inputs
 from bda_svc.model import BDAPipeline
 
 
@@ -18,12 +18,13 @@ def main() -> None:
     model = BDAPipeline()
 
     # Run analysis
-    # TODO: Add additional loop logic when parsing multiple files
     for input_path in input_paths:
         print(f"\nProcessing: {input_path}\n{'-' * 80}")
 
         result = model.analyze(input_path)
 
         # Display result
-        # TODO: Create JSON output file
         print(f"{result}\n")
+
+        # Export to JSON file
+        export.save_json(result, input_path, args.output)

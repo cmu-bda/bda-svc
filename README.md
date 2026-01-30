@@ -54,6 +54,7 @@ VLMs for Autonomous Battle Damage Assessment.
 │       └── cli.py         # Command-line functionality
 │       └── config.yaml    # Model / Prompt selection
 │       └── constants.py   # Collection of constant values
+│       └── export.py      # BDA export functionality
 │       └── inputs.py      # Input data retrieval
 │       └── model.py       # Machine learning models
 │       └── utilities.py   # Shared utilities
