@@ -23,4 +23,10 @@ def get_args() -> argparse.Namespace:
         f"'{constants.ENV_INPUT_NAME}' environment variable",
     )
 
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="path to output folder",
+    )
+
     return parser.parse_args()
