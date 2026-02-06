@@ -1,6 +1,6 @@
 # Contributing to `bda-svc`
 
-Thanks for taking the time to contribute. This repo is an automated Battle Damage Assessment (BDA) service built around a CLI-driven pipeline and supporting modules. :contentReference[oaicite:0]{index=0}
+Thanks for taking the time to contribute. This repo is an automated Battle Damage Assessment (BDA) service built around a CLI-driven pipeline and supporting modules.
 
 ## Table of Contents
 - [Ways to Contribute](#ways-to-contribute)
@@ -29,7 +29,7 @@ If you’re not sure where to start, pick an open issue or ask in the relevant p
 ---
 
 ## Project Structure
-High-level layout (see `README.md` for the authoritative version): :contentReference[oaicite:1]{index=1}
+High-level layout (see `README.md` for the authoritative version)
 
 - `.github/` — CI/CD configuration
 - `src/bda_svc/` — core package
@@ -40,12 +40,12 @@ High-level layout (see `README.md` for the authoritative version): :contentRefer
   - `inputs.py` — input retrieval/validation
   - `model.py` — model integrations
   - `utilities.py`, `constants.py`, etc.
-- `tests/` — automated tests :contentReference[oaicite:2]{index=2}
+- `tests/` — automated tests 
 
 ---
 
 ## Development Setup
-This repository uses `uv` for Python environment/dependency management, and uses `pre-commit` hooks for local quality checks. :contentReference[oaicite:3]{index=3}
+This repository uses `uv` for Python environment/dependency management, and uses `pre-commit` hooks for local quality checks. 
 
 Typical setup:
 1. Install `uv`
@@ -53,7 +53,7 @@ Typical setup:
 3. Activate the virtual environment
 4. Install pre-commit hooks
 
-Reference (from repo README): :contentReference[oaicite:4]{index=4}
+Reference (from repo README):
 
 ---
 
@@ -106,7 +106,7 @@ Suggested PR title style:
 
 ## Code Style and Quality Gates
 - Run formatting/lint checks locally before requesting review.
-- Install and use pre-commit hooks (this repo includes `.pre-commit-config.yaml`). :contentReference[oaicite:5]{index=5}
+- Install and use pre-commit hooks (this repo includes `.pre-commit-config.yaml`). 
 
 **Minimum expectation before merge:**
 - Lint/format passes
@@ -158,7 +158,7 @@ Recommended PR checklist:
 ---
 
 ## Configuration and Prompts
-The repo uses a text-based configuration file (`config.yaml`) to select models and prompts. :contentReference[oaicite:6]{index=6}
+The repo uses a text-based configuration file (`config.yaml`) to select models and prompts. 
 
 Guidelines:
 - Keep prompt templates versioned and reviewed like code.
@@ -169,12 +169,10 @@ Guidelines:
 
 ## Project Tracking
 Primary work tracking:
-- GitHub Issues: https://github.com/cmu-bda/bda-svc/issues :contentReference[oaicite:7]{index=7}
+- GitHub Issues: https://github.com/cmu-bda/bda-svc/issues 
 
 Project board:
 - GitHub Projects: https://github.com/orgs/cmu-bda/projects/1/views/2
-
-When you share your Projects link, replace the placeholder above.
 
 ---
 
