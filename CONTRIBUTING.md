@@ -33,13 +33,6 @@ High-level layout (see `README.md` for the authoritative version)
 
 - `.github/` — CI/CD configuration
 - `src/bda_svc/` — core package
-  - `app.py` — main analysis workflow
-  - `cli.py` — command-line interface
-  - `config.yaml` — model/prompt selection
-  - `export.py` — exporting BDA outputs
-  - `inputs.py` — input retrieval/validation
-  - `model.py` — model integrations
-  - `utilities.py`, `constants.py`, etc.
 - `tests/` — automated tests 
 
 ---
@@ -52,8 +45,6 @@ Typical setup:
 2. Create/sync the dev environment
 3. Activate the virtual environment
 4. Install pre-commit hooks
-
-Reference (from repo README):
 
 ---
 

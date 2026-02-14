@@ -4,7 +4,7 @@ VLMs for Autonomous Battle Damage Assessment.
 
 ![Diagram](https://github.com/user-attachments/assets/5dbd6987-7653-4948-8f8a-f326d3ac6df3)
 
-# Development Setup
+## Development Setup
 
 1. [**Install uv**](https://docs.astral.sh/uv/getting-started/installation/)
 
@@ -21,7 +21,7 @@ VLMs for Autonomous Battle Damage Assessment.
    uv run pre-commit install
    ```
 
-# Usage
+## Usage
 
 1. **For complete usage information**:
    ```bash
@@ -42,7 +42,7 @@ VLMs for Autonomous Battle Damage Assessment.
    BDA_INPUT="/path/to/images" uv run bda-svc
    ```
 
-# Project Structure
+## Project Structure
 
 ```
 ├── .github/                   # CI/CD workflows
