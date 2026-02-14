@@ -8,9 +8,7 @@ VLMs for Autonomous Battle Damage Assessment.
 
 1. [**Install uv**](https://docs.astral.sh/uv/getting-started/installation/)
 
-2. [**Install Ollama**](https://ollama.com/download)
-
-3. **Clone the repository and install dependencies**
+2. **Clone the repository and install dependencies**
    ```bash
    git clone <repository-url>
    cd bda-svc
@@ -18,7 +16,7 @@ VLMs for Autonomous Battle Damage Assessment.
    source .venv/bin/activate
    ```
 
-4. **Install pre-commit hooks**
+3. **Install pre-commit hooks**
    ```bash
    uv run pre-commit install
    ```
@@ -45,23 +43,24 @@ VLMs for Autonomous Battle Damage Assessment.
    ```
 
 # Project Structure
+
 ```
-├── .github/               # CI/CD development folder
+├── .github/                   # CI/CD workflows
 ├── src/
 │   └── bda_svc/
 │       ├── __init__.py
-│       └── app.py         # Main analysis script
-│       └── cli.py         # Command-line functionality
-│       └── config.yaml    # Model / Prompt selection
-│       └── constants.py   # Collection of constant values
-│       └── export.py      # BDA export functionality
-│       └── inputs.py      # Input data retrieval
-│       └── model.py       # Machine learning models
-│       └── utilities.py   # Shared utilities
-│   └── robot/
-│       └── containers/    # Docker / containerization
-│       └── api/           # If needed for robot communication
-├── tests/
+│       ├── app.py             # Main application entrypoint
+│       ├── cli.py             # Command-line argument parsing
+│       ├── constants.py       # Shared constants
+│       ├── export.py          # JSON export utilities
+│       ├── inputs.py          # Input path validation/discovery
+│       └── pipeline/
+│           ├── __init__.py
+│           ├── config.yaml    # VLM + prompt configuration
+│           ├── doctrine.yaml  # Doctrinal definitions
+│           ├── model.py       # BDAPipeline + VLMRunner + DetectorRunner
+│           └── utilities.py   # Pipeline helper functions
+├── tests/                     # Test suite
 ├── pyproject.toml
 ├── uv.lock
 └── README.md

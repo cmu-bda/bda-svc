@@ -1,5 +1,9 @@
-# Input data
+# Input / Output data
 bda_input/
+bda_output/
+
+# Models
+models/
 
 # Local development
 local/
