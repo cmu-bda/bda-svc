@@ -4,84 +4,60 @@ import datetime
 import json
 from pathlib import Path
 
+from json_repair import repair_json
+
 from bda_svc import constants
 
 
 def to_dict(bda: str) -> dict:
-    """Converts BDA string to dictionary.
+    """Convert BDA string to dictionary.
 
     Args:
-    ----
-        bda: BDA analysis text
+        bda: BDA analysis text.
 
     Returns:
-    -------
-        Dictionary form of BDA
+        Dictionary form of BDA.
+
+    Raises:
+        ValueError: If BDA text cannot be parsed into a JSON dictionary.
     """
-    bda_dict = {}
-    key = "unset"
+    # Preferred path: model already returned JSON text
+    try:
+        parsed = json.loads(repair_json(bda))
+        if isinstance(parsed, dict):
+            return parsed
+    except Exception:
+        pass
 
-    for line in bda.splitlines():
-        line = line.strip()
-
-        match line:
-            case "PHYSICAL DAMAGE ASSESSMENT:":
-                key = "physical"
-
-            case "FUNCTIONAL DAMAGE ASSESSMENT:":
-                key = "functional"
-
-            case "TASK ASSESSMENT:":
-                key = "assessment"
-
-            case "THREAT LEVEL RECOMMENDATION:":
-                key = "recommendation"
-
-            case _:
-                if line.startswith("- "):
-                    # Insert key with a value set to inner dict
-                    bda_dict.setdefault(key, {})
-
-                    try:
-                        # Split on (only the first) colon
-                        label, analysis = line[2:].split(": ", 1)
-
-                        bda_dict[key][label.lower()] = analysis
-                    except Exception:
-                        return {}
-
-    return bda_dict
+    # TODO: Legacy fallback: parse old sectioned plaintext format.
+    raise ValueError("Unable to parse BDA output into a JSON dictionary.")
 
 
-def save_json(bda: str, image_path: Path, output_path_str: str) -> None:
-    """Saves BDA as a JSON file.
+def save_json(bda: str, image_path: str | Path, output_path: str | Path | None) -> None:
+    """Save BDA as a JSON file.
 
     Args:
-    ----
-        bda: Battle Damage Assessment.
-        image_path: Path of the original image
-        output_path_str: Path of output folder
-
-    Returns:
-    -------
-        None
+        bda: BDA analysis text.
+        image_path: Path of the original image.
+        output_path: Path of output folder. Uses default if None/empty.
     """
-    # NOTE: Manually check output_path_str (bug setting default)
-    if not output_path_str:
-        output_path_str = constants.DEFAULT_OUTPUT_PATH
-
-    # Create the directory if necessary (as well as missing subdirectories)
-    output_path = Path(output_path_str)
+    image_path = Path(image_path)
+    output_path = Path(output_path or constants.DEFAULT_OUTPUT_PATH)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Generate full JSON filename
-    dt = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d_%H%M%SZ")
-    json_path = f"{output_path}/{image_path.stem}_{dt}.json"
+    timestamp = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d_%H%M%SZ")
+    json_path = output_path / f"{image_path.stem}_{timestamp}.json"
 
-    # Convert BDA string to dict
-    bda_dict = to_dict(bda)
+    # Preserve raw model output if parse fails
+    try:
+        bda_dict = to_dict(bda)
+    except ValueError as e:
+        bda_dict = {
+            "parse_error": str(e),
+            "raw_output": bda,
+        }
 
-    with open(json_path, "w", encoding="utf-8") as f:
+    with json_path.open("w", encoding="utf-8") as f:
         json.dump(bda_dict, f, indent=4)
 
     print(f"[*] Exported: {json_path}")
