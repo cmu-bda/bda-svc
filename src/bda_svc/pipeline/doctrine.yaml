@@ -1,0 +1,146 @@
+functional_damage_definitions: |
+  NO FUNCTIONAL DAMAGE — The target is undamaged or sustained no or minimal damage to critical element(s), causing no decrease in normal functional capability. The target is fully operational or capable of action (i.e. mission ready). This damage level does not require recuperation or replacement times.
+  LIGHT FUNCTIONAL DAMAGE — The critical element(s) of the target have sustained damage, causing less than a 15 percent decrease in normal operational capability. This damage level requires an estimate of the time required for recuperation or replacement of the target function.
+  MODERATE FUNCTIONAL DAMAGE — The critical element(s) of the target have sustained damage, causing a 15-45 percent decrease in normal operational capability. This damage level requires an estimate of the time required for recuperation or replacement of the target function.
+  SEVERE FUNCTIONAL DAMAGE — The critical element(s) of the target have sustained damage, causing greater than 45 percent decrease in normal operational capability. This damage level requires an estimate of the time required for recuperation or replacement of the target function.
+  FUNCTIONALLY DESTROYED — The critical element(s) of the target have sustained damage rendering the target unusable for its original purpose. The target is incapable of supporting combat or production operations without repair or replacement of critical elements. This damage level requires an estimate of the time required for recuperation or replacement of the target function.
+  As required, use the following functional damage definitions in situations when the basic definitions above do not apply.
+  ABANDONED — Regardless of physical damage, this facility or equipment is no longer used for its intended purpose. The target is incapable of supporting combat or production operations without being reoccupied and/or re-equipped.
+  UNKNOWN FUNCTIONAL DAMAGE — Although the critical element(s) of the target have been attacked, there is insufficient data to assess if any functional damage occurred.
+
+bridges:
+  physical_damage_definitions: |
+    NO DAMAGE - No apparent/observable damage.
+    LIGHT DAMAGE - Superficial damage to bridge, but roadway, deck or floor is undamaged.
+    MODERATE DAMAGE - All spans intact, but one or more spans damaged with holes in the deck or floor. For pontoon bridges, one pontoon section sunk.
+    SEVERE DAMAGE - All spans attached, but one or more spans have 50 percent of the deck or floor width destroyed. For pontoon bridges, two or more “non-adjacent” pontoon sections sunk.
+    DESTROYED - One or more spans dropped; piers or abutments may be damaged/destroyed. For pontoon bridges, two or more “adjacent” pontoon sections sunk.
+
+buildings:
+  physical_damage_definitions: |
+    NO DAMAGE — 0 percent of the target element area damaged.
+    LIGHT DAMAGE — Up to 15 percent of the target element area damaged.
+    MODERATE DAMAGE — 15 to 45 percent of the target element area damaged.
+    SEVERE DAMAGE — 45 to 75 percent of the target element area damaged.
+    DESTROYED — 75 to 100 percent of the target element area damaged.
+
+bunkers:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    LIGHT DAMAGE — No apparent weapon penetration into the bunker observed; however, damage to exterior is apparent.
+    MODERATE DAMAGE — Weapon perforation into the bunker observed.
+    SEVERE DAMAGE — Less than 1/3 of bunker roof/side walls collapsed.
+    DESTROYED — Greater than 1/3 of bunker roof/side walls collapsed.
+
+dams_and_locks:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    DAMAGED — Dam/lock breached (or penetration of dam/lock face) leading to seepage on downstream side.
+    DESTROYED — Dam/lock has burst, resulting in the inability of dam/lock to operate and to contain water on upstream side.
+
+distillation_towers:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    LIGHT DAMAGE — No apparent penetration of tower shell or disruption to piping connections; however, portions of the insulation covering the tower shell appear damaged and/or scorched.
+    MODERATE DAMAGE — Tower shell remains standing; tower penetrated by weapon(s), or shrapnel and/or piping connections deformed or severed.
+    DESTROYED — Tower is at least partially collapsed or toppled.
+
+electronic_data_and_information_technology_systems:
+  physical_damage_definitions: |
+    NO EFFECT — No apparent/observable effect.
+    MANIPULATED — Some or all of the data or program has been falsified or modified, so that it is intentionally wrong or deceptive.
+    DEGRADED — The information technology systems, applications, or data on a target reduced to a level represented as a percentage of capacity (e.g., 45 percent) for a specific period. Specify the level and duration of degradation achieved, if known.
+    DISRUPTED — The information technology systems, applications, or data on a target reduced by 100 percent for a specific period. Specify the duration of disruption achieved, if known.
+    DESTROYED — The information technology systems, applications, or data on a target reduced by 100 percent permanently, completely, and irreparably. Since enough time and effort could restore virtual targets, destruction of virtual targets may only be “effectively permanent,” based on the requirements and objectives of a mission.
+
+ground_force_personnel_military_units:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable casualties or damage to occupied positions or organic equipment operated by ground force personnel.
+    ATTRITED — Up to 30 percent visible casualties or damage to occupied positions or organic equipment.
+    SEVERELY ATTRITED — More than 30 percent visible casualties or damage to occupied positions or organic equipment.
+
+ground_force_personnel_individuals:
+  physical_damage_definitions: |
+    UNHARMED — No evidence of individual captured, wounded, or killed.
+    CAPTURED — Positive identification and corroborated evidence of individual detained within U.S. or coalition partner-controlled facilities.
+    WOUNDED — Positive identification and corroborated evidence of individual wounded.
+    KILLED — Positive identification and corroborated evidence of individual killed.
+
+military_equipment:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    DAMAGED — Physical deformations may include holes in equipment, scorching visible on exterior, and/or equipment components blown off (e.g., broken tracks/wheel or armored plates). Major components still intact.
+    DESTROYED — Unrepairable, possibly scrap. Catastrophic damage (K-kill).
+
+petroleum_oil_lubricants_storage_tanks:
+  physical_damage_definitions: |
+    NO DAMAGE—No apparent/observable damage.
+    LIGHT-MODERATE DAMAGE (aboveground tanks) — Top and/or side walls punctured, possible spillage of contents; no evidence of sustained fire; structural integrity remains intact.
+    LIGHT-MODERATE DAMAGE (underground or partial underground — Weapon penetration of tank confirmed; no evidence of secondary explosion or sustained fire.
+    DESTROYED — At least partial collapse/buckling of sidewall, or, evidence of sustained fire and/or a secondary explosion.
+
+power_plant_turbines_and_generators:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    DAMAGED — No apparent weapon penetration of unit, but the environmental housing over the unit has sustained damage and is disfigured. The unit may be displaced from its foundation.
+    DESTROYED — Turbine or generator unit is breached/penetrated and has extensive structural deformation, or the unit appears torn apart. Catastrophic damage (K-kill).
+
+rail_lines_and_rail_yards:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    CUT — Track(s) cratered, which prohibits movement around the damaged area. Movement around or past the damaged area (choke point or rail yard) is still possible on other lines.
+    DESTROYED — Multiple tracks with multiple cuts to prevent rolling stock from moving around or past damaged area (choke point or rail yard).
+
+roads:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    CRATERED — Road cratered, but vehicles are able to maneuver around damaged section of roadway.
+    CUT — Road and adjacent shoulders with multiple craters in line and sufficiently close enough together to prohibit vehicle movement through the cratered area of road surface.
+
+runways_and_taxiways:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    CRATERED — Runways/taxiways cratered, but aircraft able to maneuver around for taxi/flight operations.
+    CUT — Runways/taxiways with multiple craters in line and sufficiently close enough together to prohibit aircraft movement around the cratered area. However, taxi/flight operations (including aircraft launch) could occur beyond the cut.
+    INTERDICTED — Runways/taxiways with multiple cuts sufficiently close enough together to prevent takeoff/landing operations between the cuts and/or last cut and runway overrun.
+
+satellite_dishes:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    LIGHT DAMAGE — A few reflective panels blown off.
+    MODERATE DAMAGE — Less than 25 percent of the dish’s reflective panels are blown off, plus there is damage to the dish support structure and/or damage to the feedhorn.
+    SEVERE DAMAGE — 25 to 60 percent of reflective panels blown off, plus some deformation of the dish and/or the dish’s structural components. Antenna pointing changed.
+    DESTROYED — Feedhorn destroyed and/or greater than 60 percent of reflective panels blown off, and/or extensive structural deformation of the dish, and/or dish knocked off its base.
+
+ships:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    MODERATE DAMAGE — Physical deformation, holes in ship/ship’s equipment, and/or ability to move/maneuver reduced.
+    SEVERE DAMAGE — Greater than 1/3 of superstructure/deck area destroyed or burned, and/or major subsystems inoperable (e.g., weapon sensors or radar), and/or ability to move/maneuver destroyed.
+    DESTROYED — Greater than 1/3 of the ship’s waterline length is flooded (uncontrolled flooding). Sinking ship. The ship's major subsystem supporting operations destroyed.
+
+steel_towers:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    DAMAGED — Damage to support member(s), but the tower remains standing.
+    DESTROYED — Tower collapsed or toppled.
+
+transformers:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    DAMAGED — The structure of the unit is intact but appears blackened as a result of a fire or leakage of oil.
+    DESTROYED — The structure of the unit appears torn apart or extensively distorted. Catastrophic damage (K-kill).
+
+tunnel_entrances_or_portals:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    LIGHT DAMAGE — No damage to the portal, but the tunnel entrance is partially blocked by the crater or debris. If existing, the tunnel doors can be opened/closed and are passable.
+    MODERATE DAMAGE — No damage to the portal, but the tunnel entrance is completely blocked by the crater or debris. If existing, the tunnel doors cannot be opened/closed or the doors have been blown off.
+    SEVERE DAMAGE — Partial collapse of the portal; entrance completely blocked.
+    DESTROYED — Complete collapse of portal.
+
+tunnel_facility_air_vents:
+  physical_damage_definitions: |
+    NO DAMAGE — No apparent/observable damage.
+    DAMAGED — Vent opening partially blocked by the crater or debris; vent structure may be damaged.
+    DESTROYED — Vent opening completely blocked by the crater or debris.

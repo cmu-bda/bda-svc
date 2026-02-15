@@ -2,31 +2,29 @@
 
 import argparse
 
-from bda_svc import constants
-
 
 def get_args() -> argparse.Namespace:
-    """Retrieve argparse arguments.
+    """Parse command-line arguments.
 
-    Returns
-    -------
-        argparse arguments (Namespace object)
+    Returns:
+        Parsed command-line arguments.
     """
-    bda_svc_desc = "Automated BDA service powered by machine-learning."
+    bda_svc_desc = "Automated BDA service powered by machine learning."
 
     parser = argparse.ArgumentParser(description=bda_svc_desc)
 
     parser.add_argument(
         "-i",
         "--input",
-        help=f"path to input data. Overrides the "
-        f"'{constants.ENV_INPUT_NAME}' environment variable",
+        type=str,
+        help=("Path to input image file or folder."),
     )
 
     parser.add_argument(
         "-o",
         "--output",
-        help="path to output folder",
+        type=str,
+        help=("Path to output folder."),
     )
 
     return parser.parse_args()

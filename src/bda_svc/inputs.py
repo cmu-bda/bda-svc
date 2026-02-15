@@ -7,16 +7,17 @@ from pathlib import Path
 from bda_svc import constants
 
 
-def get_input_folder(cmdline_path: str) -> Path:
+def get_input_folder(cmdline_path: str | None) -> Path:
     """Retrieve input path and perform validation.
 
     Args:
-    ----
-        cmdline_path: Path to the input folder.
+        cmdline_path: Optional path from command-line arguments.
 
     Returns:
-    -------
-        Path of validated input folder
+        Validated input folder path.
+
+    Raises:
+        SystemExit: If the selected input path does not exist.
     """
     # Get command-line path argument (if provided)
     if cmdline_path:
@@ -36,30 +37,30 @@ def get_input_folder(cmdline_path: str) -> Path:
 
     # Perform path validation
     if not input_folder.exists():
-        # raise FileNotFoundError(f"Image not found at {input_path}\n")
         # Print to STDERR with exit code 1
         sys.exit(f"\nThe input path {input_folder} does not exist. Exiting.\n")
 
     return input_folder
 
 
-def get_input_paths(input_folder: Path) -> list:
-    """Retrieve paths to all input files.
+def get_input_paths(input_folder: Path) -> list[Path]:
+    """Retrieve paths to all input image files.
 
     Args:
-    ----
-        input_folder: Path of input folder
+        input_folder: Input folder path (or a single file path).
 
     Returns:
-    -------
-        List containing file paths
+        List of valid image file paths.
+
+    Raises:
+        SystemExit: If no valid input images are found.
     """
-    files = []
-    valid_ext = (".png", ".jpg", ".jpeg", ".bmp", ".tiff")
+    files: list[Path] = []
+    valid_ext = (".png", ".jpg", ".jpeg", ".bmp")
 
     # Return early if input_folder is actually a file
     if input_folder.is_file():
-        if input_folder.suffix in valid_ext:
+        if input_folder.suffix.lower() in valid_ext:
             return [input_folder]
 
         # Invalid extension
@@ -68,12 +69,12 @@ def get_input_paths(input_folder: Path) -> list:
             f"does not contain valid input data. Exiting.\n"
         )
 
-    patterns = [f"**/*{ext}" for ext in valid_ext]
-
     # Perform recursive file search
-    for pattern in patterns:
-        # NOTE: Need extend because glob returns a generator
-        files.extend(input_folder.glob(pattern))
+    files = [
+        path
+        for path in input_folder.rglob("*")
+        if path.is_file() and path.suffix.lower() in valid_ext
+    ]
 
     if not files:
         sys.exit(
@@ -81,4 +82,5 @@ def get_input_paths(input_folder: Path) -> list:
             f"does not contain valid input data. Exiting.\n"
         )
 
+    files.sort()
     return files
