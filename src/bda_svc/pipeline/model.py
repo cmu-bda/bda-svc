@@ -1,12 +1,13 @@
 """Object Detection and Vision-Language Model BDA pipeline."""
 
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 
 import torch
 from huggingface_hub import snapshot_download
 from PIL import Image
-from transformers import AutoModelForImageTextToText, AutoProcessor
+from transformers import AutoModelForImageTextToText, AutoProcessor, BitsAndBytesConfig
 
 from bda_svc.pipeline.utilities import (
     CONFIG_PATH,
@@ -14,6 +15,12 @@ from bda_svc.pipeline.utilities import (
     format_fda_doctrine,
     format_pda_doctrine,
     load_yaml,
+)
+
+warnings.filterwarnings(
+    "ignore",
+    message=r"MatMul8bitLt: inputs will be cast from .* to float16 during quantization",
+    category=UserWarning,
 )
 
 
@@ -38,19 +45,49 @@ class DetectorRunner:
 class VLMRunner:
     """Wrapper around a Hugging Face VLM."""
 
-    def __init__(self, model_id: str, model_kwargs: dict | None = None) -> None:
+    def __init__(
+        self,
+        model_id: str,
+        load_kwargs: dict | None = None,
+        generate_kwargs: dict | None = None,
+        quantization_kwargs: dict | None = None,
+    ) -> None:
         """Initialize the VLM runner.
 
         Args:
             model_id: Hugging Face model identifier.
-            model_kwargs: VLM configuration fields from config.yaml.
+            load_kwargs: VLM loading from config.yaml.
+            generate_kwargs: VLM generation from config.yaml.
+            quantization_kwargs: VLM quantization from config.yaml.
 
         Notes:
-            Loads model artifacts from the`models/` directory.
+            Loads model artifacts from the `models/` directory.
             If local artifacts are missing or incomplete, downloads the
             snapshot into `models/` and retries local loading.
+
+        Raises:
+            RuntimeError: If model loading succeeds but any modules are
+                offloaded to CPU.
         """
-        self.model_kwargs = model_kwargs or {}
+        # Configuration blocks
+        self.load_kwargs = load_kwargs or {}
+        self.generate_kwargs = generate_kwargs or {}
+        self.quantization_kwargs = quantization_kwargs or {}
+
+        # Quantization configuration
+        def _build_quantization_config() -> BitsAndBytesConfig | None:
+            if not self.quantization_kwargs.get("enabled", True):
+                return None
+            load_in_4bit = bool(self.quantization_kwargs.get("load_in_4bit", False))
+            load_in_8bit = bool(self.quantization_kwargs.get("load_in_8bit", False))
+            return BitsAndBytesConfig(
+                load_in_4bit=load_in_4bit,
+                load_in_8bit=load_in_8bit,
+            )
+
+        quantization_config = _build_quantization_config()
+        if quantization_config is not None:
+            self.load_kwargs.pop("dtype", None)
 
         # Anchor model storage to repo root
         repo_root = Path(__file__).resolve().parents[3]
@@ -59,23 +96,44 @@ class VLMRunner:
 
         def _load_local() -> None:
             self.processor = AutoProcessor.from_pretrained(
-                local_model_dir, local_files_only=True, use_fast=True
+                local_model_dir,
+                local_files_only=True,
+                use_fast=True,
+                min_pixels=256 * 28 * 28,
+                max_pixels=1280 * 28 * 28,
             )
+            model_kwargs = dict(self.load_kwargs)
+            if quantization_config is not None:
+                model_kwargs["quantization_config"] = quantization_config
             self.model = AutoModelForImageTextToText.from_pretrained(
                 local_model_dir,
-                device_map="auto",
                 local_files_only=True,
+                **model_kwargs,
             )
 
         try:
             # Load from local models directory
             _load_local()
-        except Exception:
+        except OSError:
             # Download to local models directory, then load from there
             snapshot_download(model_id, local_dir=local_model_dir)
             _load_local()
 
         self.model.eval()
+
+        # Fail fast if any module is offloaded to CPU
+        device_map = getattr(self.model, "hf_device_map", None)
+        if device_map:
+            off_gpu_modules = [
+                name
+                for name, dev in device_map.items()
+                if not str(dev).isdigit() and not str(dev).startswith("cuda:")
+            ]
+            if off_gpu_modules:
+                raise RuntimeError(
+                    "Model did not fully fit on GPU; CPU offload detected. "
+                    "Adjust dtype/quantization/model size before running inference."
+                )
 
     def generate(
         self, image: Image.Image, prompt: str, system_prompt: str | None
@@ -118,7 +176,7 @@ class VLMRunner:
 
         # Keep only newly generated tokens (drop the prompt)
         with torch.inference_mode():
-            output_ids = self.model.generate(**inputs, **self.model_kwargs)
+            output_ids = self.model.generate(**inputs, **self.generate_kwargs)
 
         if input_ids is not None:
             output_ids = output_ids[:, input_ids.shape[-1] :]
@@ -156,8 +214,15 @@ class BDAPipeline:
         # Load models
         vlm_cfg = config.get("vlm")
         vlm_id = vlm_cfg.get("model-id")
-        vlm_kwargs = {k: v for k, v in vlm_cfg.items() if k != "model-id"}
-        self.vlm = VLMRunner(model_id=vlm_id, model_kwargs=vlm_kwargs)
+        load_kwargs = vlm_cfg.get("load", {})
+        generate_kwargs = vlm_cfg.get("generate", {})
+        quantization_kwargs = vlm_cfg.get("quantization", {})
+        self.vlm = VLMRunner(
+            model_id=vlm_id,
+            load_kwargs=load_kwargs,
+            generate_kwargs=generate_kwargs,
+            quantization_kwargs=quantization_kwargs,
+        )
 
         self.detector = detector
 

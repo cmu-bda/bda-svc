@@ -1,6 +1,16 @@
-vlm:
+vlm: # https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct
   model-id: Qwen/Qwen2.5-VL-7B-Instruct
-  max_new_tokens: 512
+  load:
+    device_map: auto
+    dtype: bfloat16
+    attn_implementation: sdpa
+    max_memory: {0: "16GiB", cpu: "0GiB"}
+  generate:
+    max_new_tokens: 512
+  quantization:
+    enabled: true
+    load_in_8bit: true
+    load_in_4bit: false
 
 prompts:
   system: |
@@ -18,7 +28,7 @@ prompts:
 
     You are given doctrinal definitions for these specific target categories: {doctrine}
 
-    Judge the entire scene as a whole. Use the doctrinal information which may or may not be relevant to assess:
+    Judge the entire scene as a whole and understand the total number of targets. Use the doctrinal information which may or may not be relevant to assess:
     1) Per-target physical damage category
     2) Per-target physical damage confidence levels:
     CONFIRMED — (>= 95 percent confidence)
