@@ -5,9 +5,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import torch
+import transformers
 from huggingface_hub import snapshot_download
 from PIL import Image
-from transformers import AutoModelForImageTextToText, AutoProcessor, BitsAndBytesConfig
+from transformers import BitsAndBytesConfig, pipeline
 
 from bda_svc.pipeline.utilities import (
     CONFIG_PATH,
@@ -17,6 +18,7 @@ from bda_svc.pipeline.utilities import (
     load_yaml,
 )
 
+transformers.utils.logging.set_verbosity_error()
 warnings.filterwarnings(
     "ignore",
     message=r"MatMul8bitLt: inputs will be cast from .* to float16 during quantization",
@@ -48,67 +50,42 @@ class VLMRunner:
     def __init__(
         self,
         model_id: str,
-        load_kwargs: dict | None = None,
-        generate_kwargs: dict | None = None,
+        pipeline_kwargs: dict | None = None,
         quantization_kwargs: dict | None = None,
     ) -> None:
         """Initialize the VLM runner.
 
         Args:
             model_id: Hugging Face model identifier.
-            load_kwargs: VLM loading from config.yaml.
-            generate_kwargs: VLM generation from config.yaml.
-            quantization_kwargs: VLM quantization from config.yaml.
+            pipeline_kwargs: VLM pipeline parameters.
+            quantization_kwargs: VLM quantization parameters.
 
         Notes:
             Loads model artifacts from the `models/` directory.
             If local artifacts are missing or incomplete, downloads the
             snapshot into `models/` and retries local loading.
-
-        Raises:
-            RuntimeError: If model loading succeeds but any modules are
-                offloaded to CPU.
         """
         # Configuration blocks
-        self.load_kwargs = load_kwargs or {}
-        self.generate_kwargs = generate_kwargs or {}
+        self.pipeline_kwargs = pipeline_kwargs or {}
         self.quantization_kwargs = quantization_kwargs or {}
 
-        # Quantization configuration
-        def _build_quantization_config() -> BitsAndBytesConfig | None:
-            if not self.quantization_kwargs.get("enabled", True):
-                return None
-            load_in_4bit = bool(self.quantization_kwargs.get("load_in_4bit", False))
-            load_in_8bit = bool(self.quantization_kwargs.get("load_in_8bit", False))
-            return BitsAndBytesConfig(
-                load_in_4bit=load_in_4bit,
-                load_in_8bit=load_in_8bit,
-            )
-
-        quantization_config = _build_quantization_config()
-        if quantization_config is not None:
-            self.load_kwargs.pop("dtype", None)
-
-        # Anchor model storage to repo root
+        # Load model, download if missing
         repo_root = Path(__file__).resolve().parents[3]
         local_model_dir = repo_root / "models" / model_id.replace("/", "--")
         local_model_dir.mkdir(parents=True, exist_ok=True)
 
         def _load_local() -> None:
-            self.processor = AutoProcessor.from_pretrained(
-                local_model_dir,
-                local_files_only=True,
-                use_fast=True,
-                min_pixels=256 * 28 * 28,
-                max_pixels=1280 * 28 * 28,
-            )
-            model_kwargs = dict(self.load_kwargs)
-            if quantization_config is not None:
-                model_kwargs["quantization_config"] = quantization_config
-            self.model = AutoModelForImageTextToText.from_pretrained(
-                local_model_dir,
-                local_files_only=True,
-                **model_kwargs,
+            model_kwargs = {}
+            if quantization_kwargs.get("enabled", False):
+                model_kwargs["quantization_config"] = BitsAndBytesConfig(
+                    load_in_8bit=bool(quantization_kwargs.get("load_in_8bit", False)),
+                    load_in_4bit=bool(quantization_kwargs.get("load_in_4bit", False)),
+                )
+            self.pipeline = pipeline(
+                task="image-text-to-text",
+                model=local_model_dir,
+                model_kwargs=model_kwargs,
+                **pipeline_kwargs,
             )
 
         try:
@@ -119,21 +96,7 @@ class VLMRunner:
             snapshot_download(model_id, local_dir=local_model_dir)
             _load_local()
 
-        self.model.eval()
-
-        # Fail fast if any module is offloaded to CPU
-        device_map = getattr(self.model, "hf_device_map", None)
-        if device_map:
-            off_gpu_modules = [
-                name
-                for name, dev in device_map.items()
-                if not str(dev).isdigit() and not str(dev).startswith("cuda:")
-            ]
-            if off_gpu_modules:
-                raise RuntimeError(
-                    "Model did not fully fit on GPU; CPU offload detected. "
-                    "Adjust dtype/quantization/model size before running inference."
-                )
+        self.pipeline.model.eval()
 
     def generate(
         self, image: Image.Image, prompt: str, system_prompt: str | None
@@ -148,42 +111,27 @@ class VLMRunner:
         Returns:
             Model response text.
         """
-        # Build a chat-style prompt when the processor supports it
-        if hasattr(self.processor, "apply_chat_template"):
-            messages = []
-            if system_prompt:
-                messages.append({"role": "system", "content": system_prompt})
+        # Build a chat-style prompt
+        messages = []
+        if system_prompt:
             messages.append(
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "image"},
-                        {"type": "text", "text": prompt},
-                    ],
-                }
+                {"role": "system", "content": [{"type": "text", "text": system_prompt}]}
             )
-            text = self.processor.apply_chat_template(
-                messages, add_generation_prompt=True
-            )
-        else:
-            text = "\n\n".join(part for part in [system_prompt, prompt] if part)
+        messages.append(
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image", "image": image},
+                    {"type": "text", "text": prompt},
+                ],
+            }
+        )
 
-        # Tokenize inputs and move them to the model's device
-        inputs = self.processor(images=image, text=text, return_tensors="pt")
-        device = next(self.model.parameters()).device
-        inputs = inputs.to(device)
-        input_ids = inputs.get("input_ids")
-
-        # Keep only newly generated tokens (drop the prompt)
+        # Return response
         with torch.inference_mode():
-            output_ids = self.model.generate(**inputs, **self.generate_kwargs)
+            response = self.pipeline(messages, return_full_text=False)
 
-        if input_ids is not None:
-            output_ids = output_ids[:, input_ids.shape[-1] :]
-
-        generated_text = self.processor.decode(output_ids[0], skip_special_tokens=True)
-
-        return generated_text
+        return response[0]["generated_text"]
 
 
 class BDAPipeline:
@@ -214,13 +162,11 @@ class BDAPipeline:
         # Load models
         vlm_cfg = config.get("vlm")
         vlm_id = vlm_cfg.get("model-id")
-        load_kwargs = vlm_cfg.get("load", {})
-        generate_kwargs = vlm_cfg.get("generate", {})
-        quantization_kwargs = vlm_cfg.get("quantization", {})
+        pipeline_kwargs = vlm_cfg.get("pipeline-kwargs", {})
+        quantization_kwargs = vlm_cfg.get("quantization-kwargs", {})
         self.vlm = VLMRunner(
             model_id=vlm_id,
-            load_kwargs=load_kwargs,
-            generate_kwargs=generate_kwargs,
+            pipeline_kwargs=pipeline_kwargs,
             quantization_kwargs=quantization_kwargs,
         )
 
@@ -253,7 +199,7 @@ class BDAPipeline:
         labels = []
         for raw in response.replace("\n", ",").split(","):
             label = raw.strip().strip('"').strip("'").lower()
-            if label in self.categories and label not in labels:
+            if label in self.categories:
                 labels.append(label)
 
         return [Detection(label=label) for label in labels]
@@ -272,7 +218,7 @@ class BDAPipeline:
         doctrine = "\n\n".join(
             part
             for part in [
-                format_pda_doctrine(categories),
+                format_pda_doctrine(list(set(categories))),
                 format_fda_doctrine(),
             ]
             if part

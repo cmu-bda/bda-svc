@@ -1,15 +1,13 @@
-vlm: # https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct
-  model-id: Qwen/Qwen2.5-VL-7B-Instruct
-  load:
-    device_map: auto
-    dtype: bfloat16
-    attn_implementation: sdpa
-    max_memory: {0: "16GiB", cpu: "0GiB"}
-  generate:
+vlm:
+  model-id: OpenGVLab/InternVL3-8B-hf
+  pipeline-kwargs:
     max_new_tokens: 512
-  quantization:
-    enabled: true
-    load_in_8bit: true
+    device_map: auto
+    dtype: auto
+    trust_remote_code: true
+  quantization-kwargs:
+    enabled: false
+    load_in_8bit: false
     load_in_4bit: false
 
 prompts:
@@ -20,15 +18,16 @@ prompts:
   classify: |
     Identify which target categories are present in the image.
     Allowed categories (use these keys exactly): {categories}
-    Return a comma-separated list of exact category keys ONLY (example: "bunkers, dams_and_locks").
+    Return a comma-separated list of exact category keys ONLY (example: "bunkers, bunkers, dams_and_locks").
     If none are present, return the empty string (example: "").
 
   report: |
-    A model has identified the following target categories that may or may not be present in the scene: {categories}
+    A model has identified the following targets that may or may not be present in the scene: {categories}
 
-    You are given doctrinal definitions for these specific target categories: {doctrine}
+    You are given doctrinal definitions for these specific target categories:
+    {doctrine}
 
-    Judge the entire scene as a whole and understand the total number of targets. Use the doctrinal information which may or may not be relevant to assess:
+    Judge the entire scene as a whole. Use the doctrinal information which may or may not be relevant to assess:
     1) Per-target physical damage category
     2) Per-target physical damage confidence levels:
     CONFIRMED — (>= 95 percent confidence)
@@ -36,9 +35,11 @@ prompts:
     POSSIBLE — (<50 percent confidence)
     3) Overall scene functional damage assessment.
 
-    Output a JSON object that matches this schema.
-    For each target section, use upper case case doctrinal categories only, or skip if none exist.
-    For the functional damage section, use upper case doctrinal functional damage categories only, do not skip this section.
+    For each target section, skip if none exist.
+    For the functional damage section, use the "NO FUNCTIONAL DAMAGE" category if no targets exist.
+    Use only lowercase doctrinal definitions for target type, damage categories, and confidence_level.
+
+    Output a JSON object that exactly matches this schema.
     {
       "physical_damage": {
         "target_1": {
