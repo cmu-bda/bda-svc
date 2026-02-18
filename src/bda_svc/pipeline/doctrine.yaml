@@ -1,13 +1,3 @@
-functional_damage_definitions: |
-  NO FUNCTIONAL DAMAGE — The target is undamaged or sustained no or minimal damage to critical element(s), causing no decrease in normal functional capability. The target is fully operational or capable of action (i.e. mission ready). This damage level does not require recuperation or replacement times.
-  LIGHT FUNCTIONAL DAMAGE — The critical element(s) of the target have sustained damage, causing less than a 15 percent decrease in normal operational capability. This damage level requires an estimate of the time required for recuperation or replacement of the target function.
-  MODERATE FUNCTIONAL DAMAGE — The critical element(s) of the target have sustained damage, causing a 15-45 percent decrease in normal operational capability. This damage level requires an estimate of the time required for recuperation or replacement of the target function.
-  SEVERE FUNCTIONAL DAMAGE — The critical element(s) of the target have sustained damage, causing greater than 45 percent decrease in normal operational capability. This damage level requires an estimate of the time required for recuperation or replacement of the target function.
-  FUNCTIONALLY DESTROYED — The critical element(s) of the target have sustained damage rendering the target unusable for its original purpose. The target is incapable of supporting combat or production operations without repair or replacement of critical elements. This damage level requires an estimate of the time required for recuperation or replacement of the target function.
-  As required, use the following functional damage definitions in situations when the basic definitions above do not apply.
-  ABANDONED — Regardless of physical damage, this facility or equipment is no longer used for its intended purpose. The target is incapable of supporting combat or production operations without being reoccupied and/or re-equipped.
-  UNKNOWN FUNCTIONAL DAMAGE — Although the critical element(s) of the target have been attacked, there is insufficient data to assess if any functional damage occurred.
-
 bridges:
   physical_damage_definitions: |
     NO DAMAGE - No apparent/observable damage.
@@ -15,6 +5,9 @@ bridges:
     MODERATE DAMAGE - All spans intact, but one or more spans damaged with holes in the deck or floor. For pontoon bridges, one pontoon section sunk.
     SEVERE DAMAGE - All spans attached, but one or more spans have 50 percent of the deck or floor width destroyed. For pontoon bridges, two or more “non-adjacent” pontoon sections sunk.
     DESTROYED - One or more spans dropped; piers or abutments may be damaged/destroyed. For pontoon bridges, two or more “adjacent” pontoon sections sunk.
+  physical_damage_considerations: |
+    When reporting physical damage, report the NUMBER of spans damaged and destroyed out of the total number of spans the bridge contains.
+    The deck or floor of a railroad bridge may be either solid (ballasted-track) or open construction.
 
 buildings:
   physical_damage_definitions: |
@@ -23,6 +16,9 @@ buildings:
     MODERATE DAMAGE — 15 to 45 percent of the target element area damaged.
     SEVERE DAMAGE — 45 to 75 percent of the target element area damaged.
     DESTROYED — 75 to 100 percent of the target element area damaged.
+  physical_damage_considerations: |
+    Framed Buildings—Framed structures (e.g., military HQ, office buildings, and aircraft hangars) rarely collapse totally because of a conventional weapons attack. Regardless of overall damage, the structural-framing members supporting the building tend to remain intact. Collapse of the structural-framing members within a steel or concrete framed building is not necessary to achieve the levels of physical damage stated above. The percentage of target element damage outlined above includes damage to non-load-bearing elements (e.g., facade/ external sheathing, broken windows/glass, blown-out curtain walls, and/or blown-out roof panels).
+    Load-Bearing Wall Buildings—In contrast to framed buildings, physical damage levels of load-bearing wall structures (e.g., buildings with thick walls that carry the floor and roof loads) are generally equal to the percent of building collapse and include load-bearing as well as non- load-bearing structural elements.
 
 bunkers:
   physical_damage_definitions: |
@@ -31,6 +27,8 @@ bunkers:
     MODERATE DAMAGE — Weapon perforation into the bunker observed.
     SEVERE DAMAGE — Less than 1/3 of bunker roof/side walls collapsed.
     DESTROYED — Greater than 1/3 of bunker roof/side walls collapsed.
+  physical_damage_considerations: |
+    Evidence of successful internal weapon detonation requires the incorporation of all-source, fused intelligence data. Those indicators that can be provided by imagery or visual collection means include entrance doors blown off, burn marks outside entrances, and/or venting of smoke caused by fire or secondary explosions through openings other than the weapon penetration hole(s) (i.e., doors or air vents). Analysis of aircraft cockpit video is essential to the assessment process of all types of hardened structures (e.g., bunkers, silos, and tunnels). Video will show the venting of weapon blast energy through doors and ventilation shafts. Compare video to information on the internal configuration of the bunker to determine approximate weapon detonation location relative to the critical elements.
 
 dams_and_locks:
   physical_damage_definitions: |
@@ -44,20 +42,18 @@ distillation_towers:
     LIGHT DAMAGE — No apparent penetration of tower shell or disruption to piping connections; however, portions of the insulation covering the tower shell appear damaged and/or scorched.
     MODERATE DAMAGE — Tower shell remains standing; tower penetrated by weapon(s), or shrapnel and/or piping connections deformed or severed.
     DESTROYED — Tower is at least partially collapsed or toppled.
-
-electronic_data_and_information_technology_systems:
-  physical_damage_definitions: |
-    NO EFFECT — No apparent/observable effect.
-    MANIPULATED — Some or all of the data or program has been falsified or modified, so that it is intentionally wrong or deceptive.
-    DEGRADED — The information technology systems, applications, or data on a target reduced to a level represented as a percentage of capacity (e.g., 45 percent) for a specific period. Specify the level and duration of degradation achieved, if known.
-    DISRUPTED — The information technology systems, applications, or data on a target reduced by 100 percent for a specific period. Specify the duration of disruption achieved, if known.
-    DESTROYED — The information technology systems, applications, or data on a target reduced by 100 percent permanently, completely, and irreparably. Since enough time and effort could restore virtual targets, destruction of virtual targets may only be “effectively permanent,” based on the requirements and objectives of a mission.
+  physical_damage_considerations: |
+    When reporting physical damage to a specific tower, include damage or lack of damage to equipment directly associated with the tower. This equipment will usually include one or more furnaces, heat exchangers or condensers, and elevated pipe ways. If identified, report damage or lack of damage to the control building associated with the distillation tower. Distillation tower targets include the tower and all associated equipment.
+    Analysts providing assessments for this type of target should be mindful of any classification restrictions when providing reports to higher headquarters, especially if coalition partners are part of the targeting and assessment processes.
 
 ground_force_personnel_military_units:
   physical_damage_definitions: |
     NO DAMAGE — No apparent/observable casualties or damage to occupied positions or organic equipment operated by ground force personnel.
     ATTRITED — Up to 30 percent visible casualties or damage to occupied positions or organic equipment.
     SEVERELY ATTRITED — More than 30 percent visible casualties or damage to occupied positions or organic equipment.
+  physical_damage_considerations: |
+    In addition to providing PDA definitions, when reporting BDA against ground force personnel, provide the best estimate of total percentage destroyed.
+    For indirect fires, thirty percent casualties or materiel damage inflicted during a short timespan normally renders a unit ineffective.
 
 ground_force_personnel_individuals:
   physical_damage_definitions: |
@@ -71,6 +67,10 @@ military_equipment:
     NO DAMAGE — No apparent/observable damage.
     DAMAGED — Physical deformations may include holes in equipment, scorching visible on exterior, and/or equipment components blown off (e.g., broken tracks/wheel or armored plates). Major components still intact.
     DESTROYED — Unrepairable, possibly scrap. Catastrophic damage (K-kill).
+  physical_damage_considerations: |
+    Make careful consideration when reporting NO DAMAGE. In certain cases, physical deformations may not be observed. Use multiple sources/types of information for analytical judgments (e.g., no vehicular movement for extended periods or lack of detectable radio transmissions).
+    When reporting physical damage, report the total quantity seen and the number of pieces of equipment damaged or destroyed.
+    Generally, define military equipment as: a. Armored vehicles: Tanks and armored personnel carriers. b. Artillery: Towed and self-propelled field and antiaircraft artillery systems. c. Trucks: All types of non-armored vehicles. d. Locomotives and rolling stock: All types of rail transportation. e. Aircraft: All types of fixed and rotary wing aircraft. f. Rockets: Multi-round and single-round rockets and their associated launchers. g. Missiles: Fixed and mobile surface-to-surface and surface-to-air missiles and associated launchers. h. Radar antennas: Stand-alone or attached to van or trailer. Radars may or may not be associated with a missile site. i. Fire control components: Vans and trailers (e.g., radar, guidance, power, and computer) associated with antiaircraft, surface-to-surface, and surface-to-air missile sites.
 
 petroleum_oil_lubricants_storage_tanks:
   physical_damage_definitions: |
@@ -84,18 +84,27 @@ power_plant_turbines_and_generators:
     NO DAMAGE — No apparent/observable damage.
     DAMAGED — No apparent weapon penetration of unit, but the environmental housing over the unit has sustained damage and is disfigured. The unit may be displaced from its foundation.
     DESTROYED — Turbine or generator unit is breached/penetrated and has extensive structural deformation, or the unit appears torn apart. Catastrophic damage (K-kill).
+  physical_damage_considerations: |
+    When reporting physical damage, report the number of turbines or generators damaged and destroyed out of the total number of units at the facility.
+    One type of power plant consists of freestanding, gas turbine generator units. These units are in the open, enclosed in a thin metal environmental housing, and can operate independently of each other.
+    The other more common type of power plant consists of a multistory framed building (called the generator hall) that contains multiple turbine and generator units. Physical damage to the turbine/generator units may be difficult to identify if the generator hall remains relatively intact. Therefore, damage estimates to the units are based on the weapon detonation location and physical damage to the building itself. The closer to the floor that a weapon detonates, the greater the probability of unit damage. The extent/location of structural damage, vice roof panel damage, to the building is another indicator of unit damage. The greater the extent of wall damage and structural collapse, the greater the likelihood that the unit(s) are damaged or destroyed under the rubble.
+    When performing BDA on a generator hall, report physical damage to both the building (refer to the section on buildings) and an estimate of turbine/generator damage located inside.
 
 rail_lines_and_rail_yards:
   physical_damage_definitions: |
     NO DAMAGE — No apparent/observable damage.
     CUT — Track(s) cratered, which prohibits movement around the damaged area. Movement around or past the damaged area (choke point or rail yard) is still possible on other lines.
     DESTROYED — Multiple tracks with multiple cuts to prevent rolling stock from moving around or past damaged area (choke point or rail yard).
+  physical_damage_considerations: |
+    With these definitions, express the functional capability of the rail yard.
 
 roads:
   physical_damage_definitions: |
     NO DAMAGE — No apparent/observable damage.
     CRATERED — Road cratered, but vehicles are able to maneuver around damaged section of roadway.
     CUT — Road and adjacent shoulders with multiple craters in line and sufficiently close enough together to prohibit vehicle movement through the cratered area of road surface.
+  physical_damage_considerations: |
+    Where geographically possible, an alternative to damaging a road with crater(s) is to attack the adjacent hillside to cause a landslide to cover the road.
 
 runways_and_taxiways:
   physical_damage_definitions: |
@@ -103,6 +112,8 @@ runways_and_taxiways:
     CRATERED — Runways/taxiways cratered, but aircraft able to maneuver around for taxi/flight operations.
     CUT — Runways/taxiways with multiple craters in line and sufficiently close enough together to prohibit aircraft movement around the cratered area. However, taxi/flight operations (including aircraft launch) could occur beyond the cut.
     INTERDICTED — Runways/taxiways with multiple cuts sufficiently close enough together to prevent takeoff/landing operations between the cuts and/or last cut and runway overrun.
+  physical_damage_considerations: |
+    In assessing physical damage to runways and taxiways, the functional capability of the runway or taxiway is also implied.
 
 satellite_dishes:
   physical_damage_definitions: |
@@ -118,6 +129,13 @@ ships:
     MODERATE DAMAGE — Physical deformation, holes in ship/ship’s equipment, and/or ability to move/maneuver reduced.
     SEVERE DAMAGE — Greater than 1/3 of superstructure/deck area destroyed or burned, and/or major subsystems inoperable (e.g., weapon sensors or radar), and/or ability to move/maneuver destroyed.
     DESTROYED — Greater than 1/3 of the ship’s waterline length is flooded (uncontrolled flooding). Sinking ship. The ship's major subsystem supporting operations destroyed.
+  physical_damage_considerations: |
+    When determining the level of physical damage, consider the following:
+    Seaworthiness: Listing (in degrees), capsized, sunk.
+    Firepower: Level of damage to guns/launchers/magazines (described according to functions: surface-to-air, surface-to-surface, antisubmarine); damage to flight deck, hangars, and aircraft elevators.
+    Mobility: Percent damage to steering/rudder(s), percent degradation to speed (of sustained speed capability).
+    Sensors: Search (including air-to-surface and subsurface), radars/sonars, and fire control in terms of percent damage and type of damage.
+    C2: Damage to pilot house/bridge, combat information center, communications center/antennas, computer systems, and data links. Address all in terms of percent, type, level of damage, and estimates of reconstitution times.
 
 steel_towers:
   physical_damage_definitions: |
@@ -130,6 +148,8 @@ transformers:
     NO DAMAGE — No apparent/observable damage.
     DAMAGED — The structure of the unit is intact but appears blackened as a result of a fire or leakage of oil.
     DESTROYED — The structure of the unit appears torn apart or extensively distorted. Catastrophic damage (K-kill).
+  physical_damage_considerations: |
+    When reporting physical damage, include the total number of transformers and number damaged or destroyed.
 
 tunnel_entrances_or_portals:
   physical_damage_definitions: |
@@ -138,6 +158,10 @@ tunnel_entrances_or_portals:
     MODERATE DAMAGE — No damage to the portal, but the tunnel entrance is completely blocked by the crater or debris. If existing, the tunnel doors cannot be opened/closed or the doors have been blown off.
     SEVERE DAMAGE — Partial collapse of the portal; entrance completely blocked.
     DESTROYED — Complete collapse of portal.
+  physical_damage_considerations: |
+    Depending on the hardness of tunnel entrances and number/type of weapon employed, a complete collapse of the portal may or may not occur.
+    A portal may be referred to as an “adit.”
+    When possible in reporting damage to tunnel entrances, include the estimated volume and size of the debris/rubble pile that blocks the entrance. This debris data can assist in estimating entrance clearing/recuperation times.
 
 tunnel_facility_air_vents:
   physical_damage_definitions: |

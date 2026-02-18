@@ -1,13 +1,15 @@
 """Main application entry point for BDA Service."""
 
 from bda_svc import cli, export, inputs
-from bda_svc.pipeline.model import BDAPipeline
 
 
 def main() -> None:
     """Run BDA analysis on an image."""
     # Get command-line arguments (if any)
     args = cli.get_args()
+
+    # Lazy load heavy packages
+    from bda_svc.pipeline.model import BDAPipeline
 
     # Get input data
     input_folder = inputs.get_input_folder(args.input)
