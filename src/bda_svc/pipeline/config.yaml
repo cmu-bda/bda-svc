@@ -6,57 +6,113 @@ vlm:
     dtype: auto
     trust_remote_code: true
   quantization-kwargs:
-    enabled: false
-    load_in_8bit: false
+    enabled: true
+    load_in_8bit: true
     load_in_4bit: false
 
 prompts:
   system: |
-    You are a military expert performing a visual-only assessment of a military strike.
-    Do not hallucinate. If information is not visible or not relevant to strike assessment, say so in the logic fields.
+    You are a military strike assessment analyst performing a STRICT visual-only assessment.
+
+    CORE PRINCIPLES
+    - Do not hallucinate or infer unseen damage.
+    - Base conclusions only on visible evidence.
+    - Be conservative — do not overestimate damage.
+    - Use doctrinal definitions when provided.
+    - Follow task instructions exactly.
+    - Keep reasoning concise and evidence-based.
 
   classify: |
-    Identify which target categories are present in the image.
-    Allowed categories (use these keys exactly): {categories}
-    Return a comma-separated list of exact category keys ONLY (example: "bunkers, bunkers, dams_and_locks").
-    If none are present, return the empty string (example: "").
+    Identify and list EACH visible target instance.
+
+    Allowed categories:
+    {categories}
+
+    RULES
+    - Count ALL visible objects, including partial or edge objects.
+    - Do not group multiple objects as one.
+    - Use only visible evidence.
+    - Do not infer or guess.
+    - Use exact lowercase keys only.
+    - Do not include categories not listed above.
+    - Repeat the category key for EACH instance.
+    - Order left to right when possible.
+
+    OUTPUT
+    Return ONLY a comma-separated list of keys.
+    No extra text. No JSON.
+
+    If none visible return "".
 
   report: |
-    A model has identified the following targets that may or may not be present in the scene: {categories}
+    A detection model suggests these categories MAY be present:
+    {categories}
 
-    You are given doctrinal definitions for these specific target categories:
+    ====================
+    VALID TARGET TYPES
+    ====================
+    The ONLY valid values for target_type are:
+    {categories}
+
+    Do NOT use subtypes, examples, or descriptive terms from doctrine.
+
+    ====================
+    DOCTRINAL DEFINITIONS
+    ====================
     {doctrine}
 
-    Judge the entire scene as a whole. Use the doctrinal information which may or may not be relevant to assess:
-    1) Per-target physical damage category
-    2) Per-target physical damage confidence levels:
-    CONFIRMED — (>= 95 percent confidence)
-    PROBABLE — (50 to 94 percent confidence)
-    POSSIBLE — (<50 percent confidence)
-    3) Overall scene functional damage assessment.
+    ====================
+    ASSESSMENT RULES
+    ====================
+    - Assess ONLY objects that are visibly present.
+    - Identify ALL visible instances, including partial or edge objects.
+    - Do NOT group or summarize multiple objects as one.
+    - Base conclusions only on visible evidence.
+    - Do NOT infer unseen damage.
+    - Be conservative when estimating damage.
+    - Use doctrinal labels for damage_category.
+    - Logic must cite specific visible evidence (e.g., fire, debris, collapse, deformation, missing parts, holes).
+    - Keep logic concise (1–2 sentences) and grounded in doctrine.
 
-    For each target section, skip if none exist.
-    For the functional damage section, use the "NO FUNCTIONAL DAMAGE" category if no targets exist.
-    Use only lowercase doctrinal definitions for target type, damage categories, and confidence_level.
+    ====================
+    CONFIDENCE GUIDANCE
+    ====================
+    confidence_level is based on clarity of visible evidence:
 
-    Output a JSON object that exactly matches this schema.
+    confirmed — clear, direct visual evidence (>= 95 percent confidence)
+    probable — visible but partially obscured or ambiguous (50 to 94 percent confidence)
+    possible — weak or limited visual indicators (<50 percent confidence)
+
+    If uncertain choose the lower confidence.
+
+    ====================
+    TASK
+    ====================
+    For EACH visible object determine:
+
+    target_type  
+    damage_category  
+    confidence_level  
+    logic  
+
+    ====================
+    OUTPUT REQUIREMENTS
+    ====================
+    - Return valid JSON only.
+    - Keys must be sequential: target_1, target_2, target_3...
+    - Do NOT include extra fields.
+    - Include ONLY visible targets.
+    - If no targets are visible return:
+      {"no_targets": {"logic": "no visible targets in image"}}
+
+    ====================
+    OUTPUT SCHEMA
+    ====================
     {
-      "physical_damage": {
-        "target_1": {
-          "target_type": "string", 
-          "damage_category": "string",
-          "confidence_level": "string",
-          "brief_supporting_logic": "string"
-        },
-        "target_n": {
-          "target_type": "string",
-          "damage_category": "string",
-          "confidence_level": "string",
-          "brief_supporting_logic": "string"
-        }
-      },
-      "functional_damage": {
-        "functional_damage_level": "string",
-        "brief_supporting_logic": "string"
+      "target_1": {
+        "target_type": string,
+        "damage_category": string,
+        "confidence_level": string,
+        "logic": string
       }
     }

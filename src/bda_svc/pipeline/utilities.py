@@ -47,6 +47,7 @@ def format_pda_doctrine(categories: list[str]) -> str:
         A doctrinal PDA string in the format:
             - Target Category
             - Physical Damage Definitions
+            - Physical Damage Considerations
     """
     doctrine = load_yaml(DOCTRINE_PATH)
     output = []
@@ -58,29 +59,15 @@ def format_pda_doctrine(categories: list[str]) -> str:
         title = key.replace("_", " ").upper()
         output.append(f"TARGET CATEGORY: {title}")
 
-        for section_key in ["physical_damage_definitions"]:
+        for section_key in [
+            "physical_damage_definitions",
+            "physical_damage_considerations",
+        ]:
             section_entry = entry.get(section_key)
             if section_entry is None:
                 continue
-            title = section_key.replace("_", " ").upper()
-            output.append(f"{title}:")
+            section_title = section_key.replace("_", " ").upper()
+            output.append(f"{title} {section_title}")
             output.append(str(section_entry).strip())
-            output.append("")
 
     return "\n".join(output).strip() if output else "NO TARGET DOCTRINE AVAILABLE."
-
-
-def format_fda_doctrine() -> str:
-    """Format FDA doctrine.
-
-    Returns:
-        A doctrinal FDA string in the format:
-            - Functional Damage Definitions
-    """
-    doctrine = load_yaml(DOCTRINE_PATH)
-    output = []
-
-    output.append("SCENE LEVEL FUNCTIONAL DAMAGE DEFINITIONS:")
-    output.append(doctrine["functional_damage_definitions"])
-
-    return "\n".join(output).strip()

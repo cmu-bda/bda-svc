@@ -13,7 +13,6 @@ from transformers import BitsAndBytesConfig, pipeline
 from bda_svc.pipeline.utilities import (
     CONFIG_PATH,
     DOCTRINE_PATH,
-    format_fda_doctrine,
     format_pda_doctrine,
     load_yaml,
 )
@@ -84,6 +83,7 @@ class VLMRunner:
             self.pipeline = pipeline(
                 task="image-text-to-text",
                 model=local_model_dir,
+                local_files_only=True,
                 model_kwargs=model_kwargs,
                 **pipeline_kwargs,
             )
@@ -91,7 +91,7 @@ class VLMRunner:
         try:
             # Load from local models directory
             _load_local()
-        except OSError:
+        except (OSError, ValueError):
             # Download to local models directory, then load from there
             snapshot_download(model_id, local_dir=local_model_dir)
             _load_local()
@@ -150,10 +150,8 @@ class BDAPipeline:
         # Load all prompts
         self.system_prompt = config["prompts"]["system"]
 
-        self.classify_prompt = config["prompts"]["classify"]
-        reserved = {"functional_damage_definitions"}
-        self.categories = [k for k in doctrine.keys() if k not in reserved]
-        self.classify_prompt = self.classify_prompt.replace(
+        self.categories = [k for k in doctrine.keys()]
+        self.classify_prompt = config["prompts"]["classify"].replace(
             "{categories}", ", ".join(self.categories)
         )
 
@@ -214,19 +212,12 @@ class BDAPipeline:
             Report prompt with `categories` and `doctrine` populated.
         """
         categories = [det.label for det in detections if det.label]
-
-        doctrine = "\n\n".join(
-            part
-            for part in [
-                format_pda_doctrine(list(set(categories))),
-                format_fda_doctrine(),
-            ]
-            if part
-        ).strip()
+        doctrine = format_pda_doctrine(list(set(categories)))
 
         categories_text = ", ".join(categories) if categories else "NONE"
         output = self.report_prompt.replace("{categories}", categories_text)
         output = output.replace("{doctrine}", doctrine)
+
         return output
 
     def analyze(self, image_path: str | Path) -> str:
