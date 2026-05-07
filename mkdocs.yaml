@@ -1,0 +1,15 @@
+site_name: bda-svc
+site_description: Automated Battle Damage Assessment service
+site_url: https://cmu-bda.github.io/bda-svc/
+repo_url: https://github.com/cmu-bda/bda-svc
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - User Guide: 101-user-guide.md
+  - Containers: 102-container.md
