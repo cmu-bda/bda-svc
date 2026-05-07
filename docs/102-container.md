@@ -2,19 +2,18 @@
 
 This document describes how to build, pull, and run the `bda-svc` container across different environments.
 
+---
+
 ## Prerequisites
 
 Before building or running the container, ensure the following are installed:
 
-* Docker Engine or Docker Desktop
-* Docker Buildx (for multi-architecture builds)
-* Git
-* Access to GitHub Container Registry (GHCR), if pulling images
-* A running OpenAI-compatible model server:
-
-  * vLLM
-  * Ollama
-* A local directory containing input images
+- Docker Engine or Docker Desktop
+- Docker Buildx (for multi-architecture builds)
+- Git
+- Access to GitHub Container Registry (GHCR), if pulling images
+- A running OpenAI-compatible model server such as vLLM or Ollama
+- A local directory containing input images
 
 ---
 

@@ -106,13 +106,9 @@ A container image can be built from `docker/Dockerfile` for running `bda-svc` in
 
 ## Documentation
 
-Detailed setup, configuration, and container usage instructions will live in a future `docs/` directory.
+Full documentation is published at [cmu-bda.github.io/bda-svc](https://cmu-bda.github.io/bda-svc/) and lives in the [`docs/`](docs/) directory.
 
-For now, see:
-
-- [`CONTRIBUTING.md`](CONTRIBUTING.md)
-- [`src/bda_svc/pipeline/config.yaml`](src/bda_svc/pipeline/config.yaml)
-- [`src/bda_svc/pipeline/doctrine.yaml`](src/bda_svc/pipeline/doctrine.yaml)
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for contribution guidelines.
 
 ## License
 
